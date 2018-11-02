@@ -1,16 +1,26 @@
 #!/usr/bin/env bash
 # Squash the current branch to its merge base, and commit using provided commit message.
-#
-# Usage:
-#   squash-branch [base-branch] "commit-message"
-#
-# If base-branch is not provided, master is used.
-#
 
 set -e
 
+red='\033[0;31m'
+cyan='\033[0;36m'
+nc='\033[0m'
+
+function print_usage {
+    echo "Usage:"
+    echo "  squash-branch [base-branch] \"commit-message\""
+    echo
+    echo "  base-branch defaults to 'master'"
+} 
+
+
 if [[ $# -lt 1 || $# -gt 2 ]]; then
-    echo "Error - Wrong number of arguments"
+    echo
+    echo -e "${red}Error ${nc}- Wrong number of arguments"
+    echo
+    print_usage
+    echo
     exit 1
 fi
 
@@ -26,8 +36,8 @@ if [[ $# -eq 2 ]]; then
     message=$2
 fi
 
-echo "Current branch: $current_branch"
-echo "Base branch:    $base_branch"
+echo -e "Current branch: ${cyan}$current_branch"
+echo -e "Base branch:    ${cyan}$base_branch"
 
 git reset $(git merge-base $base_branch $current_branch)
 git add -A
